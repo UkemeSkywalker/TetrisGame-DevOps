@@ -2,7 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import sys, random
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QFrame,
+    QDesktopWidget,
+    QApplication,
+    QHBoxLayout,
+    QLabel,
+)
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor
 
@@ -10,6 +17,7 @@ from tetris_model import BOARD_DATA, Shape
 from tetris_ai import TETRIS_AI
 
 # TETRIS_AI = None
+
 
 class Tetris(QMainWindow):
     def __init__(self):
@@ -41,16 +49,20 @@ class Tetris(QMainWindow):
         self.start()
 
         self.center()
-        self.setWindowTitle('Tetris')
+        self.setWindowTitle("Tetris")
         self.show()
 
-        self.setFixedSize(self.tboard.width() + self.sidePanel.width(),
-                          self.sidePanel.height() + self.statusbar.height())
+        self.setFixedSize(
+            self.tboard.width() + self.sidePanel.width(),
+            self.sidePanel.height() + self.statusbar.height(),
+        )
 
     def center(self):
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
-        self.move((screen.width() - size.width()) // 2, (screen.height() - size.height()) // 2)
+        self.move(
+            (screen.width() - size.width()) // 2, (screen.height() - size.height()) // 2
+        )
 
     def start(self):
         if self.isPaused:
@@ -116,11 +128,11 @@ class Tetris(QMainWindow):
             return
 
         key = event.key()
-        
+
         if key == Qt.Key_P:
             self.pause()
             return
-            
+
         if self.isPaused:
             return
         elif key == Qt.Key_Left:
@@ -137,14 +149,43 @@ class Tetris(QMainWindow):
         self.updateWindow()
 
 
+# def drawSquare(painter, x, y, val, s):
+#     colorTable = [0x000000, 0xCC6666, 0x66CC66, 0x6666CC,
+#                   0xCCCC66, 0xCC66CC, 0x66CCCC, 0xDAAA00]
+
+#     if val == 0:
+#         return
+
+#     color = QColor(colorTable[val])
+#     painter.fillRect(x + 1, y + 1, s - 2, s - 2, color)
+
+#     painter.setPen(color.lighter())
+#     painter.drawLine(x, y + s - 1, x, y)
+#     painter.drawLine(x, y, x + s - 1, y)
+
+#     painter.setPen(color.darker())
+#     painter.drawLine(x + 1, y + s - 1, x + s - 1, y + s - 1)
+#     painter.drawLine(x + s - 1, y + s - 1, x + s - 1, y + 1)
+
+
 def drawSquare(painter, x, y, val, s):
-    colorTable = [0x000000, 0xCC6666, 0x66CC66, 0x6666CC,
-                  0xCCCC66, 0xCC66CC, 0x66CCCC, 0xDAAA00]
+    colorTable = [
+        0x000000,
+        0xCC6666,
+        0x66CC66,
+        0x6666CC,
+        0xCCCC66,
+        0xCC66CC,
+        0x66CCCC,
+        0xDAAA00,
+    ]
 
     if val == 0:
         return
 
     color = QColor(colorTable[val])
+    x = int(x)  # Convert x coordinate to integer
+    y = int(y)  # Convert y coordinate to integer
     painter.fillRect(x + 1, y + 1, s - 2, s - 2, color)
 
     painter.setPen(color.lighter())
@@ -175,7 +216,13 @@ class SidePanel(QFrame):
 
         val = BOARD_DATA.nextShape.shape
         for x, y in BOARD_DATA.nextShape.getCoords(0, 0, -minY):
-            drawSquare(painter, x * self.gridSize + dx, y * self.gridSize + dy, val, self.gridSize)
+            drawSquare(
+                painter,
+                x * self.gridSize + dx,
+                y * self.gridSize + dy,
+                val,
+                self.gridSize,
+            )
 
 
 class Board(QFrame):
@@ -199,16 +246,20 @@ class Board(QFrame):
         for x in range(BOARD_DATA.width):
             for y in range(BOARD_DATA.height):
                 val = BOARD_DATA.getValue(x, y)
-                drawSquare(painter, x * self.gridSize, y * self.gridSize, val, self.gridSize)
+                drawSquare(
+                    painter, x * self.gridSize, y * self.gridSize, val, self.gridSize
+                )
 
         # Draw current shape
         for x, y in BOARD_DATA.getCurrentShapeCoord():
             val = BOARD_DATA.currentShape.shape
-            drawSquare(painter, x * self.gridSize, y * self.gridSize, val, self.gridSize)
+            drawSquare(
+                painter, x * self.gridSize, y * self.gridSize, val, self.gridSize
+            )
 
         # Draw a border
         painter.setPen(QColor(0x777777))
-        painter.drawLine(self.width()-1, 0, self.width()-1, self.height())
+        painter.drawLine(self.width() - 1, 0, self.width() - 1, self.height())
         painter.setPen(QColor(0xCCCCCC))
         painter.drawLine(self.width(), 0, self.width(), self.height())
 
@@ -217,7 +268,7 @@ class Board(QFrame):
         self.update()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # random.seed(32)
     app = QApplication([])
     tetris = Tetris()

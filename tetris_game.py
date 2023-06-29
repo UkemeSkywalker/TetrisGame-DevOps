@@ -242,6 +242,9 @@ class Board(QFrame):
     def paintEvent(self, event):
         painter = QPainter(self)
 
+        # Set background color to black
+        painter.fillRect(self.rect(), QColor(0x000000))
+
         # Draw backboard
         for x in range(BOARD_DATA.width):
             for y in range(BOARD_DATA.height):

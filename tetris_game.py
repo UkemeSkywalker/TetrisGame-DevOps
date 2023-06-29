@@ -16,7 +16,7 @@ from PyQt5.QtGui import QPainter, QColor
 from tetris_model import BOARD_DATA, Shape
 from tetris_ai import TETRIS_AI
 
-# TETRIS_AI = None
+TETRIS_AI = None
 
 
 class Tetris(QMainWindow):
